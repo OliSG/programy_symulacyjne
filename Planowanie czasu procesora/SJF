@@ -1,0 +1,52 @@
+#!/usr/bin/python3
+
+def sjf(processes):
+    current_time = 0
+    completion_times = []
+    waiting_times = []
+    while processes:                   #funkcja trwa aż wszystkie procesy zostaną ukończone
+        burst_time = float('inf')      #wartość musi być bardzo wysoka, żeby czas trwania procesu był zawsze niższy
+        min_index = -1                 #wartość indexu jest ustawiona na -1 żeby mieć pewność, że żaden proces nie będzie wybrany
+        for j in range(len(processes)):
+            if processes[j][1] <= current_time and processes[j][2] < burst_time:    #pętla sprawdza wszystkie procesy, które przybyły wcześniej lub w aktualnym czasie,
+                burst_time = processes[j][2]                                        # wybiera ten, który ma najkrótszy czas wykonania
+                min_index = j
+        if min_index == -1:                                                         #jeżeli w kolejce nie ma żadnego procesu to czas zostaje zwiększony o 1
+            current_time += 1                                                       #i pętla znów jest uruchamiana
+            continue
+        completion_time = current_time + burst_time                                 #wyliczany jest czas trwania algorytmu poprzez zsumowanie aktualnego czasu i czasu trwania procesu
+        completion_times.append([processes[min_index][0], completion_time])         #czas jest wpisywany do listy razem z id procesu
+        waiting_times.append(current_time - processes[min_index][1])                #czas oczekiwania jest wyliczany z różnicy aktualnego czasu i czasu przybycia danego procesu
+        current_time = completion_time
+        processes.pop(min_index)                                                    #na końcu proces jest usuwany z kolejki procesów, żeby nie był wyliczany ponownie
+
+    total_waiting_time = sum(waiting_times)
+    total_completion_time = 0
+    for i in range(len(completion_times)):
+        total_completion_time += completion_times[i][1]
+    
+    avg_waiting_time = total_waiting_time / len(completion_times)
+    avg_completion_time = total_completion_time / len(completion_times)
+    print("average waiting time: ", avg_waiting_time)
+    print("average job completion time: ", avg_completion_time)
+
+    return completion_times, waiting_times
+
+
+def main():
+    processes = []
+    with open('procesy.txt', 'r') as f:
+        lines = f.readlines()
+    for line in lines:
+        elements = line.split('.')
+        elements=elements[:-1] 
+        elements = [eval(i) for i in elements]
+        processes.append(elements)
+
+
+    completion_times, waiting_times = sjf(processes)
+    for i in range(len(completion_times)):
+        print(f"Process {completion_times[i][0]} completed at t={completion_times[i][1]}, waiting time t={waiting_times[i]}")
+
+if __name__ == '__main__':
+    main()
