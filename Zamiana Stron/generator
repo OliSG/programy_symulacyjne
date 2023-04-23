@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+import random
+
+def main():
+    n = 100
+
+    with open("pages.txt", "w") as f:
+        for i in range(n):
+            page = random.randint(0, 9) #wartość generuje się z zakresu 0-9
+            f.write(f'{page}.')
+
+
+
+if __name__=='__main__':
+    main()
