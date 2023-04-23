@@ -1,0 +1,65 @@
+#!/usr/bin/python3
+
+def sort():
+    processes = []
+
+    with open('procesy.txt', 'r') as f:
+        lines = f.readlines()
+        
+    for line in lines:
+        elements = line.split('.')
+        elements=elements[:-1] 
+        elements = [eval(i) for i in elements]
+        processes.append(elements)
+    #print(processes)
+    processes.sort(key=lambda x: int(x[1]))
+    
+    return processes
+
+def fcfs(processes, num_processes):
+
+    completion_times = []
+    waiting_time=[]
+    current_time = 0
+    for p in processes:
+        arrival_time = p[1]
+        burst_time = p[2]
+
+        if current_time < arrival_time:
+            current_time = arrival_time
+
+        completion_time = current_time + burst_time
+        
+        completion_times.append(completion_time)
+        waiting_time.append(current_time-arrival_time)
+
+        current_time = completion_time
+
+    #wyliczanie średniego czasu oczekiwania
+    total_waiting_time = sum(waiting_time)
+    avg_wait_time = total_waiting_time/num_processes
+    print('average waiting time:',avg_wait_time)
+
+    #wyliczanie średniego czasu ukończenia zadania
+    total=sum(completion_times)
+    avg_completion_time = total/num_processes
+    print('average job completion time:',avg_completion_time)
+
+
+    return completion_times, waiting_time
+
+
+def main():
+
+
+    processes = sort()
+
+    print(processes)
+    num_processes = len(processes) #ilość procesów = ilości procesów wpisanych do pliku
+    completion_times, waiting_time = fcfs(processes, num_processes)
+
+    for i in range(num_processes):
+        print(f"Process {processes[i][0]} completed at t={completion_times[i]}, waiting time t={waiting_time[i]}")
+
+if __name__=="__main__":
+    main()
