@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+
+def LRU(pages, capacity):
+    faults = 0
+
+    lru = [] 
+
+    for page in pages:
+        print("Current LRU Content: ",lru)
+        print("Value added: ", page)
+        if page not in lru:    
+            if len(lru) == capacity: 
+                lru.pop(0)      
+            lru.append(page)     
+            faults += 1
+        else:
+            lru.remove(page)
+            lru.append(page)
+    print("Final LRU Content: ", lru)
+    return faults
+
+def main():
+    with open ('pages.txt', 'r') as f:
+        pages = f.read()
+    pages = pages.split('.')
+    pages = pages[:-1]
+    pages = [eval(i) for i in pages]
+    
+    capacity = int(input("capacity: "))
+    output =  LRU(pages, capacity)
+    print ("total faults:",output)
+
+if __name__=="__main__":
+    main()
