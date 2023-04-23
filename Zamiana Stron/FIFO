@@ -1,0 +1,33 @@
+#!/usr/bin/python3
+
+def FIFO(pages, capacity):
+    faults = 0
+    
+    fifo = [] # tablica ograniczana zadanym rozmiarem, do przechowywania podanych wartości
+
+    for page in pages:
+        print("Current FIFO Content: ",fifo)  
+        print("Value added: ", page)          
+
+        if page not in fifo:          #jeśli strona nie jest jeszcze wpisana do tablicy pętla się włącza
+            if len(fifo) == capacity: #jeśli tablica osiągnęła swój limit
+                fifo.pop(0)           #najstarszy element w tablicy zostaje usunięty
+            fifo.append(page)         #kolejny element zostaje dopisany
+            faults += 1               #licznik błędów strony zostaje zwiększony o 1
+    print("Final FIFO Content: ", fifo)
+    return faults
+
+def main():
+    
+    with open ('pages.txt', 'r') as f:
+        pages = f.read()
+    pages = pages.split('.')
+    pages = pages[:-1]
+    pages = [eval(i) for i in pages]
+    
+    capacity = int(input("capacity: "))
+    output =  FIFO(pages, capacity)
+    print ("total faults:",output)
+
+if __name__=="__main__":
+    main()
