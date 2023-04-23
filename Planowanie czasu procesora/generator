@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+import random
+def main():
+    n = 100 #ilość procesów do wygenerowania
+
+    with open("procesy.txt", "w") as f:
+        for i in range(n):
+            arrival_time = random.randint(0, 9) #czas przybycia procesu losuje się z zakresu 1 do 9
+            execution_time = random.randint(1, 5) #czas wykonania procesu generuje się z zakresu 1 do 5
+            f.write(f"{i}.{arrival_time}.{execution_time}."'\n')
+
+if __name__=="__main__":
+    main()
